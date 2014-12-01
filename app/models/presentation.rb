@@ -11,7 +11,7 @@ class Presentation < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :theme
-  friendly_id :slug_candidates, use: :slugged
+  friendly_id :slug_candidates, use: [:slugged, :history]
   
   acts_as_taggable
 
@@ -34,7 +34,7 @@ class Presentation < ActiveRecord::Base
   end
 
   def short_description
-    description.split.first(10).join(' ')
+    description.to_s.split.first(10).join(' ')
   end
   
   def self.for(user_id)

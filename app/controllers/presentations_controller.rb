@@ -1,4 +1,5 @@
 class PresentationsController < ApplicationController
+  # before_action :require_auth
   before_action :set_presentation, only: [:show, :edit, :update, :destroy, :launch]
   before_action :check_access, only: [:launch, :create, :update, :destroy, :edit, :new]
 
@@ -60,12 +61,20 @@ class PresentationsController < ApplicationController
 
   # GET /presentations/new
   def new
-    @presentation = Presentation.new
+    @presentation = Presentation.create(
+        :name => "A New Twalk by #{current_user.nickname}",
+        :description => "created #{Time.zone.now.strftime('%Y-%m-%d - %H:%M')}",
+        :user => current_user,
+        :theme => Theme.default
+      )
+    edit
   end
 
   # GET /presentations/1/edit
   def edit
+    redirect_to "/editor/dashboard/#{@presentation.slug}"
   end
+
 
   # POST /presentations
   # POST /presentations.json
@@ -98,6 +107,15 @@ class PresentationsController < ApplicationController
     end
   end
 
+  def save_presentation
+    pres = Presentation.friendly.find(params[:presentation_id])
+    pres.name = params[:content][:presentation_name][:value]
+    pres.description = params[:content][:presentation_description][:value]
+    pres.save!
+
+    render text: ''
+  end
+
   # DELETE /presentations/1
   # DELETE /presentations/1.json
   def destroy
@@ -120,13 +138,10 @@ class PresentationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def presentation_params
-      params.require(:presentation).permit(:name, :slug, :description, :is_public, :latitude, :longitude)
+      params.require(:presentation).permit(:name, :slug, :description, :is_public, :latitude, :longitude, :theme_id)
     end
 
     def check_access
-      unless user_signed_in?
-        cookies[:redirect_to] = request.fullpath
-        redirect_to signin_path, :notice => 'You must be logged in to do that.'
-      end
+      # current_user.has_role?(:collaborator, @presentation)
     end
 end
