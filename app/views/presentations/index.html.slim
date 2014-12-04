@@ -1,23 +1,23 @@
-= link_to raw('New <span class="brand">twalk</span>'), new_presentation_path, :data => { 'no-turbolink' => true }
+= render :partial => 'nav'
 
-- if @presentations.any?
-  table.table.table-hover
-    tr
-      th Name
-      th
-      th
+.row
+  .col-md-6
+    - if @presentations.any?
+      table.table
+        tr
+          th Name
+          th
+          th
 
-    - @presentations.each do |presentation|
-      tr
-        td= link_to presentation.name, presentation_path(presentation)
-        - if presentation.mine?(current_user)
-          td= link_to 'Edit', edit_presentation_path(presentation), :data => { 'no-turbolink' => true }
-          td= link_to 'Destroy', presentation, :method => :delete, :data => { :confirm => 'Are you sure?' }
-        - else
-          td &nbsp;
-          td &nbsp;
+        - @presentations.each do |presentation|
+          tr
+            td= link_to presentation.name, presentation_path(presentation)
+            - if presentation.mine?(current_user)
+              td= link_to 'Edit', edit_presentation_path(presentation), :data => { 'no-turbolink' => true }
+              td= link_to 'Destroy', presentation, :method => :delete, :data => { :confirm => 'Are you sure?' }
+            - else
+              td &nbsp;
+              td &nbsp;
+    - else
 
-
-- else
-
-  h3 You have no <span class="brand">twalk</span>s.
+      h3 You have no <span class="brand">twalk</span>s.

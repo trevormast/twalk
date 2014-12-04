@@ -1,5 +1,5 @@
 class PresentationsController < ApplicationController
-  # before_action :require_auth
+  before_action :require_auth
   before_action :set_presentation, only: [:show, :edit, :update, :destroy, :launch]
   before_action :check_access, only: [:launch, :create, :update, :destroy, :edit, :new]
 
@@ -9,7 +9,7 @@ class PresentationsController < ApplicationController
   # GET /presentations
   # GET /presentations.json
   def index
-    @presentations = current_user.presentations
+    @presentations = Presentation.for(current_user.id)
   end
 
   # GET /presentations/1
@@ -19,7 +19,7 @@ class PresentationsController < ApplicationController
   end
 
   def launch
-    @websocket_path = Rails.env == "development" ? "localhost:5000#{websocket_path}" : websocket_path
+    @websocket_path = Rails.env == "development" ? "localhost:#{ENV['PORT']}#{websocket_path}" : websocket_path
     # TODO: cleanup this logic. Create model methods for some of this shit
     if @presentation.user_id == current_user.id
       if current_user.party
@@ -50,10 +50,6 @@ class PresentationsController < ApplicationController
     render :layout => "presentation"
   end
 
-  def mine
-    @presentations = Presentation.for(current_user.id)
-  end
-
   def nearby
     add_breadcrumb "Nearby", "/nearby"
     @presentations = Presentation.near(current_user_latlon)
@@ -61,18 +57,12 @@ class PresentationsController < ApplicationController
 
   # GET /presentations/new
   def new
-    @presentation = Presentation.create(
-        :name => "A New Twalk by #{current_user.nickname}",
-        :description => "created #{Time.zone.now.strftime('%Y-%m-%d - %H:%M')}",
-        :user => current_user,
-        :theme => Theme.default
-      )
-    edit
+    @presentation = Presentation.new
   end
 
   # GET /presentations/1/edit
   def edit
-    redirect_to "/editor/dashboard/#{@presentation.slug}"
+    # redirect_to "/editor/dashboard/#{@presentation.slug}"
   end
 
 
@@ -108,12 +98,25 @@ class PresentationsController < ApplicationController
   end
 
   def save_presentation
-    pres = Presentation.friendly.find(params[:presentation_id])
-    pres.name = params[:content][:presentation_name][:value]
-    pres.description = params[:content][:presentation_description][:value]
-    pres.save!
+    @presentation = current_user.presentations.friendly.find(params[:presentation_id])
+    @presentation.name = params[:content][:presentation_name][:value]
+    @presentation.description = params[:content][:presentation_description][:value]
 
-    render text: ''
+    @presentation.slides.each do |slide|
+      unless slide.nil?
+        slide.contents.each do |content|
+          unless content.nil?
+            content.body = params[:content]["presentation_slide_#{slide.slug}_content_#{content.slug}"][:value]
+          end
+        end
+      end
+    end
+
+    if @presentation.save!
+      render text: ''
+    else
+      render text: 'ERROR'
+    end
   end
 
   # DELETE /presentations/1
@@ -130,7 +133,7 @@ class PresentationsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_presentation
       begin
-        @presentation = Presentation.friendly.find(params[:id])
+        @presentation = current_user.presentations.friendly.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         redirect_to '/404.html'
       end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141202233952) do
+ActiveRecord::Schema.define(version: 20141206005618) do
 
   create_table "content_types", force: true do |t|
     t.string   "name"
@@ -88,9 +88,11 @@ ActiveRecord::Schema.define(version: 20141202233952) do
     t.datetime "geolocation_updated_at"
     t.integer  "geolocation_accuracy"
     t.integer  "theme_id"
+    t.string   "hashtag"
   end
 
-  add_index "presentations", ["slug"], name: "index_presentations_on_slug", unique: true
+  add_index "presentations", ["hashtag"], name: "index_presentations_on_hashtag"
+  add_index "presentations", ["slug"], name: "index_presentations_on_slug"
   add_index "presentations", ["user_id"], name: "index_presentations_on_user_id"
 
   create_table "roles", force: true do |t|
@@ -108,6 +110,7 @@ ActiveRecord::Schema.define(version: 20141202233952) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "presentation_id"
+    t.integer  "theme_id"
     t.integer  "sort_order"
     t.string   "slug"
   end

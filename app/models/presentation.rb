@@ -11,11 +11,13 @@ class Presentation < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :theme
-  friendly_id :slug_candidates, use: [:slugged, :history]
+  friendly_id :slug_candidates, :use => [:history, :scoped], :scope => :user
   
   acts_as_taggable
 
   geocoded_by :ip_address
+
+  accepts_nested_attributes_for :slides, :theme
 
   def mine?(who)
     user_id == who.id
