@@ -12,6 +12,11 @@ $(function () {
     $(this).delay((i++) * 500).fadeTo(500, 1);
   });
 
-  $('.presentation-navigation').width(parseInt($(window).width() * 0.18)+"px");
+  // $('.presentation-navigation.expanded, .slide-navigation.expanded').width(parseInt($(window).width() * 0.18)+"px");
+  $('.presentation-navigation, .slide-navigation').mouseenter(function () {
+    $(this).addClass('expanded');
+  }).mouseleave(function () {
+    $(this).removeClass('expanded');
+  });
     
 });
