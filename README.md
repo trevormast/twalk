@@ -25,7 +25,7 @@ Why Twitter?
 
 ![Sign in with Twitter](http://i.imgur.com/ZAMoIwS.png)
 
-### Clone and 
+### Clone and Run
 
 1. Clone the repo `git clone git@github.com:amoose/twalk.git`
 2. Bundle `bundle install`
@@ -35,7 +35,7 @@ Why Twitter?
 ### Dependencies
 - Ruby 2.1.5
 - ImageMagick `brew install imagemagick`
-- aws s3 [account](https://aws.amazon.com/s3/) 
+- AWS s3 [account](https://aws.amazon.com/s3/) 
 
 
 
