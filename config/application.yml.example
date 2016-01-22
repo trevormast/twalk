@@ -7,12 +7,24 @@
 # makes 'Your_Gmail_Username' available as ENV["GMAIL_USERNAME"]
 # Add application configuration variables here, as shown below.
 #
-ADMIN_NAME: admin
-ADMIN_EMAIL: email
-ADMIN_PASSWORD: changeme
+
+GMAIL_USERNAME: changeme 
+GMAIL_PASSWORD:  changeme
+
 TWITTER_KEY: changeme
 TWITTER_SECRET: changeme
+
+ROLES: [admin, user, member]
+
 GITHUB_KEY: changeme
 GITHUB_SECRET: changeme
-ROLES: [admin, user, member]
-PORT: 3000
+
+# s3 access
+ACCESS_KEY_ID: changeme
+SECRET_ACCESS_KEY: changeme
+S3_BUCKET: changeme
+
+PORT: 5000
+
+WEBSOCKET_STANDALONE: false 
+

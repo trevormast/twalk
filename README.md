@@ -18,17 +18,24 @@ Why Twitter?
 
 ## Getting Started
 
-### Register your application with Twitter
+### [Register](https://apps.twitter.com/) your application with Twitter
 
 - The callback URL will resemble: http://localhost:3000/auth/twitter/callback
 - Be sure to enable 'Sign in with Twitter'
 
 ![Sign in with Twitter](http://i.imgur.com/ZAMoIwS.png)
 
+### Clone and 
+
 1. Clone the repo `git clone git@github.com:amoose/twalk.git`
 2. Bundle `bundle install`
 3. Copy and configure parameters `cp config/application.yml.example config/application.yml`
-3. `thin start`
+4. `thin start`
+
+### Dependencies
+- Ruby 2.1.5
+- ImageMagick `brew install imagemagick`
+- aws s3 [account](https://aws.amazon.com/s3/) 
 
 
 
